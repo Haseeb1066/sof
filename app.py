@@ -13,12 +13,12 @@ app = Flask(__name__)
 client = OpenAI()
 
 # Tableau Config
-PAT_NAME = "test"
+PAT_NAME = os.getenv("TABLEAU_PAT_NAME")
 PAT_SECRET = os.getenv("TABLEAU_PAT_SECRET")
-SITE_CONTENT_URL = "multinetpakistanpvtltd"
-TABLEAU_SERVER = "https://prod-apnortheast-a.online.tableau.com"
-API_VERSION = "3.18"
-VIEW_ID = "6bcc2ce9-60e5-4c42-9ff1-e38b14e82f74"
+SITE_CONTENT_URL = os.getenv("SITE_CONTENT_URL")
+TABLEAU_SERVER = os.getenv("TABLEAU_SERVER")
+API_VERSION = os.getenv("API_VERSION")
+VIEW_ID = os.getenv("VIEW_ID")
 
 chat_history = []
 
