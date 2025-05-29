@@ -14,7 +14,7 @@ client = OpenAI()
 
 # Tableau Config
 PAT_NAME = "test"
-PAT_SECRET = "MMPfXGM1SiiimTQoRV7HTA==:cSqLgPrazgDIvtrl5wlPB9GKdZTTMFTH"
+PAT_SECRET = os.getenv("TABLEAU_PAT_SECRET")
 SITE_CONTENT_URL = "multinetpakistanpvtltd"
 TABLEAU_SERVER = "https://prod-apnortheast-a.online.tableau.com"
 API_VERSION = "3.18"
