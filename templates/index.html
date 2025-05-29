@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sofia</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background-color: #ece5dd;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .chat-header {
+            background-color: #075E54;
+            color: white;
+            padding: 10px 15px;
+            font-size: 18px;
+        }
+        .chat-history {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #e5ddd5;
+        }
+        .user-msg, .bot-msg {
+            margin: 10px 0;
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 10px;
+            clear: both;
+        }
+        .user-msg {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .bot-msg {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            align-self: flex-start;
+        }
+        .chat-input {
+            display: flex;
+            border-top: 1px solid #ddd;
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+        }
+        .chat-input button {
+            background-color: #075E54;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Sofia 
+        </div>
+        <div class="chat-history" id="chat-box">
+            {% for entry in chat_history %}
+                <div class="user-msg"><strong>You:</strong> {{ entry.user }}</div>
+                <div class="bot-msg"><strong>Sofia:</strong> {{ entry.bot }}</div>
+            {% endfor %}
+        </div>
+        <form method="POST" class="chat-input" id="chat-form">
+            <input type="text" name="user_input" placeholder="Type a message" id="chat-input" autocomplete="off" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <!-- <script>
+        // Scroll chat to bottom on load
+        const chatBox = document.getElementById("chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Submit form on Enter key press
+        const chatForm = document.getElementById("chat-form");
+        const chatInput = document.getElementById("chat-input");
+
+        chatInput.addEventListener("keypress", function (e) {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                chatForm.submit();
+            }
+        });
+    </script> -->
+
+    <script>
+    // Scroll chat to bottom on load
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+
+    chatForm.addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent form from submitting traditionally
+
+        const userInput = chatInput.value.trim();
+        if (userInput === "") return;
+
+        // 1. Display user's message immediately
+        const userMsgDiv = document.createElement("div");
+        userMsgDiv.className = "user-msg";
+        userMsgDiv.innerHTML = `<strong>You:</strong> ${userInput}`;
+        chatBox.appendChild(userMsgDiv);
+
+        // Scroll to the bottom
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // 2. Send message to server via fetch POST
+        fetch("/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+                user_input: userInput,
+            }),
+        })
+        .then(response => response.text())
+        .then(html => {
+            // 3. Replace the entire document with the updated HTML from the server
+            document.open();
+            document.write(html);
+            document.close();
+        });
+
+        // 4. Clear input
+        chatInput.value = "";
+    });
+</script>
+
+</body>
+</html>
